@@ -1,12 +1,13 @@
 from keras.models import Sequential
 from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
-from keras.preprocessing.image import ImageDataGenerator
+from keras.preprocessing.image import ImageDataGenerator, load_img, img_to_array
+import numpy as np
 from keras import backend as K
 K.set_image_dim_ordering('th')
 
 
-def main():
+def get_model():
     model = Sequential()
     model.add(Conv2D(32, (3, 3), input_shape=(3, 150, 150)))
     model.add(Activation('relu'))
@@ -28,7 +29,25 @@ def main():
     model.add(Dropout(0.5))
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
+    return model
 
+
+def from_weights():
+    weights_file = "first_try.h5"
+    model = get_model()
+    model.load_weights(weights_file)
+    model.compile(loss='binary_crossentropy',
+                  optimizer='rmsprop',
+                  metrics=['accuracy'])
+    # img = load_img("images_processed/validation/loss/111.jpg")
+    img = load_img("images_processed/train/other-memes/171db73579cdca0559be6e6c5d8366fe.jpg")
+    x = img_to_array(img)  # this is a Numpy array with shape (3, 150, 150)
+    x = x.reshape((1,) + x.shape)
+    preds = model.predict(x)
+
+
+def train(epochs):
+    model = get_model()
     model.compile(loss='binary_crossentropy',
                   optimizer='rmsprop',
                   metrics=['accuracy'])
@@ -64,10 +83,15 @@ def main():
     model.fit_generator(
             train_generator,
             steps_per_epoch=2000 // batch_size,
-            epochs=1,
+            epochs=epochs,
             validation_data=validation_generator,
             validation_steps=800 // batch_size)
-    model.save_weights('first_try.h5')  # always save your weights after training or during training
+    model.save_weights('1_epoch.h5')  # always save your weights after training or during training
+
+
+def main():
+    train(10)
+    # from_weights()
 
 if __name__ == "__main__":
     main()
