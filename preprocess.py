@@ -34,24 +34,33 @@ def main():
     loss = os.listdir("images_unprocessed/train/loss/")
     other = os.listdir("images_unprocessed/train/other-memes/")
     
+    # Used to enfore equal class sizes across input data
+    # This makes it easier to judge output performance since you can expect
+    # a random accuracy to be 0.50
+    class_size = 400
+    
     # Split the data in half for training/validation
     num_loss = len(loss)
     for i in range(num_loss):
-        if i < num_loss / 2:
+        if i < class_size / 2:
             copyfile("images_unprocessed/train/loss/" + loss[i],
                      "images_processed/train/loss/" + loss[i])
         else: 
             copyfile("images_unprocessed/train/loss/" + loss[i],
                      "images_processed/validation/loss/" + loss[i])
+        if i == class_size:
+            break
 
     num_other = len(other)
     for i in range(num_other):
-        if i < num_other / 2:
+        if i < class_size / 2:
             copyfile("images_unprocessed/train/other-memes/" + other[i],
                      "images_processed/train/other-memes/" + other[i] + ".jpg")
         else: 
             copyfile("images_unprocessed/train/other-memes/" + other[i],
                      "images_processed/validation/other-memes/" + other[i] + ".jpg")
+        if i == class_size:
+            break
     
 
     # Resize every image
@@ -60,7 +69,7 @@ def main():
             "images_processed/validation/loss/",
             "images_processed/validation/other-memes/"]
 
-    output_size = (128, 128)
+    output_size = (150, 150)
     for directory in dirs:
         resize_all(directory, directory, output_size)
      
