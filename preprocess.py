@@ -38,11 +38,14 @@ def main():
     # This makes it easier to judge output performance since you can expect
     # a random accuracy to be 0.50
     class_size = 400
-    
+
+    # What ration of the data goes to the training set
+    training_val_ratio = 0.75        
+
     # Split the data in half for training/validation
     num_loss = len(loss)
     for i in range(num_loss):
-        if i < class_size / 2:
+        if i < class_size * training_val_ratio:
             copyfile("images_unprocessed/train/loss/" + loss[i],
                      "images_processed/train/loss/" + loss[i])
         else: 
@@ -53,7 +56,7 @@ def main():
 
     num_other = len(other)
     for i in range(num_other):
-        if i < class_size / 2:
+        if i < class_size * training_val_ratio:
             copyfile("images_unprocessed/train/other-memes/" + other[i],
                      "images_processed/train/other-memes/" + other[i] + ".jpg")
         else: 
