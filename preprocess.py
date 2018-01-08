@@ -1,4 +1,5 @@
 import os
+import random
 from shutil import copyfile
 from keras.preprocessing.image import load_img
 
@@ -33,14 +34,18 @@ def main():
     
     loss = os.listdir("images_unprocessed/train/loss/")
     other = os.listdir("images_unprocessed/train/other-memes/")
+
+    # Randomize what the input will be 
+    random.shuffle(loss)
+    random.shuffle(other)
     
     # Used to enfore equal class sizes across input data
     # This makes it easier to judge output performance since you can expect
     # a random accuracy to be 0.50
-    class_size = 400
+    class_size = 543
 
     # What ration of the data goes to the training set
-    training_val_ratio = 0.75        
+    training_val_ratio = 0.75
 
     # Split the data in half for training/validation
     num_loss = len(loss)
