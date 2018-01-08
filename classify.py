@@ -41,7 +41,6 @@ def get_model():
 
     model.add(Dense(64))
     model.add(Activation('relu'))
-    # model.add(Activation('softmax'))
     model.add(Dropout(0.5))
     model.add(Dense(1))
     model.add(Activation('sigmoid'))
